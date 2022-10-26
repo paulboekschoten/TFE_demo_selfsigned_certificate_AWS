@@ -64,44 +64,50 @@ ssh -i TFEDemoPaul.pem ubuntu@52.47.75.180
 Login with ssh to the EC2 instance.  
 
 ```
-cd /tmp
-mkdir certs
+sudo mkdir -p /tmp/certs
 cd certs
 ```
 
 First start by creating your CA key:
 
 ```
-openssl genrsa -out tfe_ca.key 2048
+sudo openssl genrsa -out tfe_ca.key 2048
 ```
 
 Next we need to create our CA certificate
 Here you have to fill in information about your company, it does not really matter as you have to trust it yourself.
 
 ```
-openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
+sudo openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
 ```
 
 Next we have to create a certificate for that server we want to use SSL on
 
 ```
-openssl genrsa -out tfe_server.key 2048
+sudo openssl genrsa -out tfe_server.key 2048
 ```
 
 After that we need certificate request, it is here you have to fill in the domain name that you are going to use the certificate with:
 
 ```
-openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=52.47.75.180"
+sudo openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=52.47.75.180"
 ```
 
 Then lastly we can create our server certificate
 ```
-openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt
+sudo openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt
 ```
 
 Copy the CA.crt so it will be recognized as a certified CA certificate.
 ```
-sudo cp tfe_ca.crt /etc/ssl/certs/
+sudo apt-get install -y ca-certificates
+sudo cp tfe_ca.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+```
+
+Check the certificate is placed in `/etc/ssl/certs`
+```
+ls /etc/ssl/certs/tfe_ca.pem
 ```
 
 ## TFE
@@ -123,6 +129,7 @@ Do you want to:
 [1] enter new address
 Enter desired number (0-1): 0
 ```
+Use the external ip address.  
 
 ```
 Does this machine require a proxy to access the Internet? (y/N) N
@@ -152,9 +159,8 @@ Configure `HTTPS for admin console`
 
 Click `Save & Continue`.
 
-You will get a message  
-![](media/2022-10-21-14-01-29.png)  
-
+Again you will get message about an unsafe connection.  
+Click `Advanced` and then `Proceed to 52.47.75.180 (unsafe)`.  
 
 ![](media/2022-10-24-11-28-18.png)  
 Upload you license file.  
@@ -173,7 +179,7 @@ Error that mounted disk path is not set.
 
 On the commandline via ssh  
 ```
-sudo mdir /tfe_data
+sudo mkdir /tfe_data
 ```
 
 Go to `Settings` and then `Mounted Disk Configuration`.  
@@ -186,14 +192,23 @@ Save.
 ![](media/2022-10-24-12-02-23.png)  
 Click `Restart Now`.  
 
+After a few minutes you should see
 ![](media/2022-10-24-12-06-55.png)  
 
+Click on `Open` below `Stop Now`.   
 
+Again you will get message about an unsafe connection.  
+Click `Advanced` and then `Proceed to 52.47.75.180 (unsafe)`.  
 
-tfe_password             = "Password#1"  
+Create an admin user.  
+![](media/2022-10-26-11-36-31.png)   
+Click `Create an account`.  
 
+Create an organisation.  
+![](media/2022-10-26-11-38-07.png)  
+Click `Create organization`
 
-sudo apt-get install -y ca-certificates
-sudo cp /tmp/tfe_ca.crt /usr/local/share/ca-certificates/
-sudo cp /tmp/certs/tfe_server.crt /usr/local/share/ca-certificates/
-sudo update-ca-certificates
+![](media/2022-10-26-11-39-48.png)  
+
+You now can have a working TFE and can create workspaces.  
+

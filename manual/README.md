@@ -13,7 +13,7 @@ Official installation documentation can be found [here](https://www.terraform.io
 
 ## key pair
 To be able to login with ssh to your ec2 instance, you'll need a key pair.  
-Go to `Key pairs` and click create.  
+Go to `Key pairs` and click `Create key pair`.  
 
 ![](media/2022-10-21-10-36-04.png)  
 Give it a useful name and click `Create key pair`.  
@@ -26,15 +26,18 @@ chmod 0600 TFEDemoPaul.pem
 ```
 
 ## Security group
+Allow certain ports to connect to your TFE instance.  
+Go to `Security Groups` and click `Create security groups`.  
 
 ![](media/2022-10-21-11-32-58.png)  
 
 ![](media/2022-10-21-11-33-22.png)  
 
 ![](media/2022-10-21-11-33-39.png)  
-
+Click `Create security groups`.  
 
 ## EC2 instance
+Create an EC2 instance to install TFE on.  
 Go to EC2 instances and click `Launch instances`.  
 
 ![](media/2022-10-21-10-42-02.png)  
@@ -64,57 +67,47 @@ ssh -i TFEDemoPaul.pem ubuntu@52.47.75.180
 Login with ssh to the EC2 instance.  
 
 ```
-sudo mkdir -p /tmp/certs
-cd certs
+mkdir -p /tmp/certs
+cd /tmp/certs
 ```
 
 First start by creating your CA key:
 
 ```
-sudo openssl genrsa -out tfe_ca.key 2048
+openssl genrsa -out tfe_ca.key 2048
 ```
 
 Next we need to create our CA certificate
 Here you have to fill in information about your company, it does not really matter as you have to trust it yourself.
 
 ```
-sudo openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
+openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
 ```
 
 Next we have to create a certificate for that server we want to use SSL on
 
 ```
-sudo openssl genrsa -out tfe_server.key 2048
+openssl genrsa -out tfe_server.key 2048
 ```
 
 After that we need certificate request, it is here you have to fill in the domain name that you are going to use the certificate with:
 
 ```
-sudo openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=52.47.75.180"
+openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=52.47.75.180"
 ```
 
 Then lastly we can create our server certificate
 ```
-sudo openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt
+openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt
 ```
 
-Copy the CA.crt so it will be recognized as a certified CA certificate.
-```
-sudo apt-get install -y ca-certificates
-sudo cp tfe_ca.crt /usr/local/share/ca-certificates/
-sudo update-ca-certificates
-```
-
-Check the certificate is placed in `/etc/ssl/certs`
-```
-ls /etc/ssl/certs/tfe_ca.pem
-```
 
 ## TFE
 Install
 ```
-sudo curl -o /tmp/install.sh https://install.terraform.io/ptfe/stable
-sudo chmod +x /tmp/install.sh
+cd /tmp/
+curl -o /tmp/install.sh https://install.terraform.io/ptfe/stable
+chmod +x /tmp/install.sh
 sudo /tmp/install.sh
 ```
 
@@ -210,5 +203,5 @@ Click `Create organization`
 
 ![](media/2022-10-26-11-39-48.png)  
 
-You now can have a working TFE and can create workspaces.  
+You now have a working TFE and can create workspaces.  
 

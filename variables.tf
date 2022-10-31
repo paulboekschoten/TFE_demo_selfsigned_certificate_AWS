@@ -25,3 +25,9 @@ variable "replicated_port" {
   type        = number
   default     = 8800
 }
+
+variable "instance_type" {
+  description = "The instance type to use for the TFE host."
+  type        = string
+  default     = "m5.xlarge"
+}

@@ -102,6 +102,8 @@ resource "aws_instance" "paul-tfe" {
   key_name               = aws_key_pair.paul-tf.key_name
   vpc_security_group_ids = [aws_security_group.paul-sg-tf.id]
 
+  user_data = templatefile("${path.module}/scripts/user_data.sh", {})
+
   tags = {
     Name = "${var.environment}-tfe"
   }

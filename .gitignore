@@ -31,5 +31,8 @@ override.tf.json
 # lock file 
 .terraform.lock.hcl
 
+# license files
+*.rli
+
 # Ignore apple folder
 .DS_Store

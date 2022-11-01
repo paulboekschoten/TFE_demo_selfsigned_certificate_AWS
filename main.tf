@@ -102,9 +102,31 @@ resource "aws_instance" "paul-tfe" {
   key_name               = aws_key_pair.paul-tf.key_name
   vpc_security_group_ids = [aws_security_group.paul-sg-tf.id]
 
-  user_data = templatefile("${path.module}/scripts/user_data.sh", {})
+  user_data = templatefile("${path.module}/scripts/user_data.sh", {
+    enc_password        = var.tfe_encryption_password,
+    replicated_password = var.replicated_password,
+    admin_username      = var.admin_username,
+    admin_email         = var.admin_email,
+    admin_password      = var.admin_password
+  })
+
+  root_block_device {
+    volume_size = 100
+  }
 
   tags = {
     Name = "${var.environment}-tfe"
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.rsa-4096.private_key_pem
+    host        = self.public_ip
+  }
+
+  provisioner "file" {
+    source      = "config/license.rli"
+    destination = "/tmp/license.rli"
   }
 }

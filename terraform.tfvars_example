@@ -1,0 +1,7 @@
+region                  = "eu-west-3"               # AWS region to deploy in
+environment             = "TFEDemo"                 # Name of the environment, used in naming of resources
+tfe_encryption_password = "Password123"             # Password used for encrypting TFE data
+replicated_password     = "Password123"             # Password used for Replicated dashboard
+admin_username          = "tfe_admin"               # TFE admin username
+admin_email             = "tfe_admin@example.com"   # TFE admin email address
+admin_password          = "Password123"             # TFE admin password

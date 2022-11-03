@@ -1,5 +1,5 @@
-# TFE_demo_selfsigned_certificate_AWS
-This repository installs Terraform Enterprise (TFE) in AWS on a Ubuntu virtual machine.  
+# Terraform Enterprise installation with self-signed certificates on AWS  
+This repository installs Terraform Enterprise (TFE) with self-signed certificates in AWS on a Ubuntu virtual machine.  
 
 This terraform code creates
  - A key pair
@@ -13,10 +13,10 @@ This terraform code creates
 
 
 # Prerequisites
- - An AWS account
+ - An AWS account with default VPC and internet access.
  - A TFE license
 
-# How to
+# How to install TFE with self-signed certficates on AWS
 - Clone this repository.  
 ```
 git clone https://github.com/paulboekschoten/tfe_demo_selfsigned_certificate_aws.git

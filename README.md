@@ -56,16 +56,16 @@ terraform plan
 terraform apply
 ```
 
-Terraform output should show 8 resources to be created.  
+Terraform output should show 9 resources to be created with output similar to below. 
 ```
-Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-private_ssh_key = <sensitive>
-public_ip = "35.180.86.221"
-replicated_dashboard = "https://35.180.86.221:8800"
-tfe_login = "https://35.180.86.221"
+public_ip = "13.37.108.9"
+replicated_dashboard = "https://13.37.108.9:8800"
+ssh_login = "ssh -i tfesshkey.pem ubuntu@13.37.108.9"
+tfe_login = "https://13.37.108.9"
 ```
 
 

@@ -31,8 +31,8 @@ resource "aws_key_pair" "paul-tf" {
 
 # store private ssh key locally
 resource "local_file" "tfesshkey" {
-  content  = tls_private_key.rsa-4096.private_key_pem
-  filename = "${path.module}/tfesshkey.pem"
+  content         = tls_private_key.rsa-4096.private_key_pem
+  filename        = "${path.module}/tfesshkey.pem"
   file_permission = "0600"
 }
 

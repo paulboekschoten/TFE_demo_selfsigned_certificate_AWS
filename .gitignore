@@ -36,3 +36,6 @@ override.tf.json
 
 # Ignore apple folder
 .DS_Store
+
+# Ignore .pem files
+*.pem

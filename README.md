@@ -19,12 +19,12 @@ This terraform code creates
 # How to
 - Clone this repository.  
 ```
-git clone https://github.com/paulboekschoten/TFE_demo_selfsigned_certificate_AWS.git
+git clone https://github.com/paulboekschoten/tfe_demo_selfsigned_certificate_aws.git
 ```
 
 - Go to the directory 
 ```
-cd TFE_demo_selfsigned_certificate_AWS
+cd tfe_demo_selfsigned_certificate_aws
 ```
 
 - Rename `terraform.tfvars_example` to `terraform.tfvars`.  
@@ -76,7 +76,7 @@ tfe_login = "https://35.180.86.221"
 ## Obtaining private ssh key
 Writing private ssh key to a pem file from terraform output.
 ```
-terraform output -raw private_ssh_key > ../TFEDemoPaulUbuntu.pem
+terraform output -raw private_ssh_key > ../tfe_demo_paul_ubuntu.pem
 ```
 
 ## SSH Login
@@ -95,7 +95,7 @@ ssh -i ../TFEDemoPaulUbuntu.pem ubuntu@<public_ip>
  - [x] Create a security group rules
  - [x] Create an EC2 instance
  - [x] Create self-signed certificates
-  - [x] Install TFE 
+ - [x] Install TFE 
    - [x] Download TFE
    - [x] Create settings.json
    - [x] Create replicated.conf

@@ -73,18 +73,6 @@ tfe_login = "https://35.180.86.221"
 - Click on the open button to go to TFE of go to the `tfe_login` url.  
 
 
-## Obtaining private ssh key
-Writing private ssh key to a pem file from terraform output.
-```
-terraform output -raw private_ssh_key > ../tfe_demo_paul_ubuntu.pem
-```
-
-## SSH Login
-After obtaining the private ssh key, you can ssh to the machine with the following command.  
-```
-ssh -i ../TFEDemoPaulUbuntu.pem ubuntu@<public_ip>
-```
-
 # TODO
 
 

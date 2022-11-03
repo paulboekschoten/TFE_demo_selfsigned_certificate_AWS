@@ -12,6 +12,7 @@ public_ip=$(curl -4 icanhazip.com)
 mkdir -p /tmp/certs
 cd /tmp/certs
 
+# create self-signed certificates
 openssl genrsa -out tfe_ca.key 2048
 openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
 openssl genrsa -out tfe_server.key 2048

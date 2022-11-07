@@ -16,8 +16,9 @@ cd /tmp/certs
 openssl genrsa -out tfe_ca.key 2048
 openssl req -new -x509 -days 1095 -key tfe_ca.key -out tfe_ca.crt -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=Example Root"
 openssl genrsa -out tfe_server.key 2048
-openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=$public_ip"
-openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt
+openssl req -new -key tfe_server.key -out tfe_server.csr  -subj "/C=EX/ST=Example/L=Example/O=Example, Inc./OU=Example/CN=$public_ip.nip.io" -addext "subjectAltName=DNS:$public_ip.nip.io,DNS:$public_ip"
+openssl x509 -req -days 365 -in tfe_server.csr -CA tfe_ca.crt -CAkey tfe_ca.key -CAcreateserial -out tfe_server.crt -extfile <(printf "subjectAltName=DNS:$public_ip.nip.io,DNS:$public_ip")
+# note, $public_ip.nip.io has to be in the SAN when defined in replicated.conf for TlsBootstrapHostname
 
 # create a directory where TFE stores it's data
 sudo mkdir /tfe_data
@@ -26,7 +27,7 @@ sudo mkdir /tfe_data
 cat >/etc/settings.json <<EOL
 {
     "hostname": {
-        "value": "$public_ip"
+        "value": "$public_ip.nip.io"
     },
     "disk_path": {
         "value": "/tfe_data"
@@ -43,7 +44,7 @@ cat >/etc/replicated.conf <<EOL
     "DaemonAuthenticationType":     "password",
     "DaemonAuthenticationPassword": "${replicated_password}",
     "TlsBootstrapType":             "server-path",
-    "TlsBootstrapHostname":         "$public_ip",
+    "TlsBootstrapHostname":         "$public_ip.nip.io",
     "TlsBootstrapCert":             "/tmp/certs/tfe_server.crt",
     "TlsBootstrapKey":              "/tmp/certs/tfe_server.key",
     "BypassPreflightChecks":        true,
@@ -59,7 +60,7 @@ sudo bash ./install.sh
 
 
 # wait for TFE to become ready
-while ! curl -ksfS --connect-timeout 5 https://$public_ip/_health_check; do
+while ! curl -ksfS --connect-timeout 5 https://$public_ip.nip.io/_health_check; do
     sleep 5
 done
 
@@ -82,5 +83,5 @@ curl -k \
   --header "Content-Type: application/json" \
   --request POST \
   --data @/tmp/payload_admin.json \
-  https://$public_ip/admin/initial-admin-user?token=$initial_token
+  https://$public_ip.nip.io/admin/initial-admin-user?token=$initial_token
 

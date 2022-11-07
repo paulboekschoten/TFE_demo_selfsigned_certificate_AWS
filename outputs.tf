@@ -5,15 +5,15 @@ output "public_ip" {
 
 output "replicated_dashboard" {
   description = "Url for Replicated dashboard."
-  value       = "https://${aws_instance.paul-tfe.public_ip}:8800"
+  value       = "https://${aws_instance.paul-tfe.public_ip}.nip.io:8800"
 }
 
 output "tfe_login" {
   description = "Url for TFE login."
-  value       = "https://${aws_instance.paul-tfe.public_ip}"
+  value       = "https://${aws_instance.paul-tfe.public_ip}.nip.io"
 }
 
 output "ssh_login" {
   description = "SSH login command."
-  value       = "ssh -i tfesshkey.pem ubuntu@${aws_instance.paul-tfe.public_ip}"
+  value       = "ssh -i tfesshkey.pem ubuntu@${aws_instance.paul-tfe.public_ip}.nip.io"
 }
